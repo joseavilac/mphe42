@@ -1,0 +1,31 @@
+Package: pphelp
+Title: Guía de R Commander y Pruebas Estadísticas en Salud Pública
+Version: 0.0.1
+Authors@R: 
+    person("José Alejandro", "Ávila", , "jaachusc@gmail.com", role = c("aut", "cre"))
+Description: Asistente para estudiantes que se inician en la estadística
+    con R Commander en salud pública e investigación epidemiológica. Ofrece
+    una guía interactiva que indica, paso a paso, qué menús y opciones de R
+    Commander utilizar según el análisis que se quiere realizar, y funciones
+    interactivas que aplican e interpretan las pruebas más habituales:
+    normalidad, homogeneidad de varianzas (Levene), prueba t para una y dos
+    muestras independientes, pruebas de proporciones para una y dos muestras
+    (aproximación normal, binomial exacta y prueba exacta de Fisher) y
+    correlación de Pearson, Spearman y Kendall. Cada función comprueba los
+    supuestos, plantea las hipótesis, explica el estadístico y el valor p,
+    proporciona intervalos de confianza y medidas del tamaño del efecto,
+    propone una redacción de los resultados y muestra la orden equivalente
+    en R Commander.
+License: MIT + file LICENSE
+Language: es
+Config/roxygen2/version: 8.1.1
+Encoding: UTF-8
+Depends:
+    R (>= 4.2.0)
+Imports:
+    car,
+    grDevices,
+    nortest,
+    stats,
+    utils
+Roxygen: list(markdown = TRUE)
