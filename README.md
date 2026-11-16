@@ -1,6 +1,7 @@
 # pphelp
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
 **pphelp** es un asistente para estudiantes que se inician en la estadística
@@ -23,30 +24,30 @@ investigación epidemiológica. Tiene dos partes:
 El paquete se instala desde GitHub. Solo hace falta R (versión 4.2 o
 posterior); no requiere Rtools porque no contiene código compilado.
 
-``` r
+```r
 # install.packages("remotes")   # solo la primera vez
-remotes::install_github("TU_USUARIO/pphelp")
+remotes::install_github("joseavilac/pphelp")
 ```
 
 Las dependencias (`car` y `nortest`) se instalan automáticamente desde CRAN.
 
 Para instalar una versión concreta:
 
-``` r
-remotes::install_github("TU_USUARIO/pphelp@v0.0.1")
+```r
+remotes::install_github("joseavilac/pphelp@v0.0.1")
 ```
 
 Si no hay acceso a GitHub, se puede instalar desde el archivo del paquete
 (`pphelp_0.0.1.tar.gz`):
 
-``` r
+```r
 install.packages(c("car", "nortest"))
 install.packages("pphelp_0.0.1.tar.gz", repos = NULL, type = "source")
 ```
 
 ## Uso
 
-``` r
+```r
 library(pphelp)
 ```
 
@@ -58,22 +59,22 @@ momento se puede cancelar con `0`.
 
 ### Funciones disponibles
 
-| Función | Qué hace | Equivalente en R Commander |
-|---|---|---|
-| `indicar()` | Guía paso a paso de las tareas habituales en R Commander | — |
-| `normalidad()` | Pruebas de normalidad (Shapiro-Wilk, Shapiro-Francia, Anderson-Darling, Cramer-von Mises, Lilliefors, chi cuadrado), global o por grupos | Estadísticos > Resúmenes > Test de normalidad |
-| `varianza()` | Prueba de Levene de homogeneidad de varianzas | Estadísticos > Varianzas > Test de Levene |
-| `media_1muestra()` | Prueba t para una muestra | Estadísticos > Medias > Test t para una muestra |
-| `media_2muestra()` | Prueba t para dos muestras independientes (Welch o Student) | Estadísticos > Medias > Test t para muestras independientes |
-| `proporcion_1muestra()` | Prueba de proporciones para una muestra (aproximación normal o binomial exacta) | Estadísticos > Proporciones > Test de proporciones para una muestra |
-| `proporcion_2muestra()` | Comparación de dos proporciones independientes (aproximación normal o prueba exacta de Fisher), con RR y OR | Estadísticos > Proporciones > Test de proporciones para dos muestras |
-| `prueba_correlacion()` | Correlación de Pearson, Spearman o Kendall, con covarianza | Estadísticos > Resúmenes > Test de correlación |
+| Función                  | Qué hace                                                                                                                                | Equivalente en R Commander                                            |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `indicar()`             | Guía paso a paso de las tareas habituales en R Commander                                                                                | —                                                                    |
+| `normalidad()`          | Pruebas de normalidad (Shapiro-Wilk, Shapiro-Francia, Anderson-Darling, Cramer-von Mises, Lilliefors, chi cuadrado), global o por grupos | Estadísticos > Resúmenes > Test de normalidad                       |
+| `varianza()`            | Prueba de Levene de homogeneidad de varianzas                                                                                            | Estadísticos > Varianzas > Test de Levene                            |
+| `media_1muestra()`      | Prueba t para una muestra                                                                                                                | Estadísticos > Medias > Test t para una muestra                      |
+| `media_2muestra()`      | Prueba t para dos muestras independientes (Welch o Student)                                                                              | Estadísticos > Medias > Test t para muestras independientes          |
+| `proporcion_1muestra()` | Prueba de proporciones para una muestra (aproximación normal o binomial exacta)                                                         | Estadísticos > Proporciones > Test de proporciones para una muestra  |
+| `proporcion_2muestra()` | Comparación de dos proporciones independientes (aproximación normal o prueba exacta de Fisher), con RR y OR                            | Estadísticos > Proporciones > Test de proporciones para dos muestras |
+| `prueba_correlacion()`  | Correlación de Pearson, Spearman o Kendall, con covarianza                                                                              | Estadísticos > Resúmenes > Test de correlación                     |
 
 Cada función tiene su página de ayuda: `?media_2muestra`, `?indicar`, etc.
 
 ### Ejemplo
 
-``` r
+```r
 media_2muestra()
 ```
 
@@ -120,7 +121,7 @@ Todas las funciones aceptan el argumento `alpha` (por defecto 0.05) y
 devuelven de forma invisible una lista con los resultados, por si se quieren
 reutilizar:
 
-``` r
+```r
 res <- media_2muestra(alpha = 0.01)
 res$prueba        # resultado de t.test()
 ```
