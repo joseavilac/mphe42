@@ -371,6 +371,128 @@ guias_indicar <- function() {
         "Correlación no implica causalidad: una correlación entre dos variables puede deberse a una tercera variable.",
         "Las observaciones con NA en cualquiera de las dos variables se excluyen del cálculo."
       )
+    ),
+
+    # 11. ANOVA de un factor ----------------------------------------------------
+    anova = list(
+      titulo = "Comparar las medias de tres o más grupos (ANOVA de un factor)",
+      ruta = c(
+        "1) Estadísticos > Resúmenes > Test de normalidad...           (solo si algún grupo tiene n < 30)",
+        "2) Estadísticos > Varianzas > Test de Levene...",
+        "3) Estadísticos > Medias > ANOVA de un factor...",
+        "   o bien Estadísticos > Test no paramétricos > Test de Kruskal-Wallis..."
+      ),
+      pasos = list(
+        "ANTES DE EMPEZAR" = c(
+          "La variable explicativa (los grupos) debe ser un factor con TRES o más categorías. Si tiene dos, usa la opción 'Comparar las medias de dos muestras independientes'.",
+          "Comprueba el tamaño de cada grupo (Estadísticos > Resúmenes > Resúmenes numéricos..., 'Resumir por grupos', columna 'n')."
+        ),
+        "PASO 1. Normalidad (solo si algún grupo tiene menos de 30 observaciones)" = c(
+          "Si todos los grupos tienen 30 o más observaciones, salta al paso 2.",
+          "Ve a: Estadísticos > Resúmenes > Test de normalidad...",
+          "Selecciona la variable numérica y deja marcado el test de Shapiro-Wilk.",
+          "Pulsa 'Test por grupos...' y selecciona la variable que define los grupos.",
+          "Pulsa 'Aceptar' y mira el valor p de cada grupo: si p >= 0.05 en todos, asumimos normalidad; si p < 0.05 en alguno, NO asumimos normalidad y debes usar el test de Kruskal-Wallis (opción 'Pruebas no paramétricas')."
+        ),
+        "PASO 2. Test de Levene (¿son iguales las varianzas?)" = c(
+          "Ve a: Estadísticos > Varianzas > Test de Levene...",
+          "En 'Factores' selecciona la variable de grupo y en 'Variable explicada' la variable numérica.",
+          "Deja 'Centro' en 'Mediana' y pulsa 'Aceptar'.",
+          "Mira el valor p ('Pr(>F)'): si p >= 0.05 asumimos varianzas IGUALES; si p < 0.05, varianzas DISTINTAS. Lo necesitarás en el paso 3."
+        ),
+        "PASO 3. ANOVA de un factor" = c(
+          "Ve a: Estadísticos > Medias > ANOVA de un factor...",
+          "Deja el nombre del modelo que propone R Commander (p. ej. AnovaModel.1) o escribe otro.",
+          "En 'Grupos' selecciona la variable de grupo y en 'Variable explicada' la variable numérica.",
+          "Marca 'Comparaciones dos a dos de las medias' para obtener las comparaciones post hoc de Tukey (te dirán QUÉ grupos son distintos).",
+          "Si el test de Levene dio p < 0.05, marca también 'Test F de Welch que no asume varianzas iguales'.",
+          "Pulsa 'Aceptar'. Mira: la tabla ANOVA (estadístico 'F value' y valor p 'Pr(>F)'), las medias y desviaciones típicas de cada grupo y, si el ANOVA es significativo, las comparaciones dos a dos (diferencia, IC y valor p ajustado de cada par).",
+          "Si marcaste el test de Welch, usa SU valor p (en lugar del de la tabla ANOVA) para decidir."
+        )
+      ),
+      ejemplos = c(
+        "Pregunta: ¿el IMC medio es distinto según el nivel de estudios (primarios, secundarios, universitarios)?",
+        "  H0: las tres medias son iguales.  H1: al menos una media es distinta.",
+        "  Si p < 0.05 -> mira las comparaciones dos a dos para saber qué pares de grupos difieren."
+      ),
+      codigo = c(
+        "AnovaModel.1 <- aov(imc ~ estudios, data = datos)",
+        "summary(AnovaModel.1)",
+        'with(datos, numSummary(imc, groups = estudios, statistics = c("mean", "sd")))',
+        "# Welch (si las varianzas son distintas)",
+        "oneway.test(imc ~ estudios, data = datos)",
+        "# Comparaciones dos a dos (Tukey)",
+        "local({",
+        '  .Pairs <- glht(AnovaModel.1, linfct = mcp(estudios = "Tukey"))',
+        "  print(summary(.Pairs))",
+        "  print(confint(.Pairs))",
+        "})"
+      ),
+      consejos = c(
+        "Un ANOVA significativo solo indica que AL MENOS una media es distinta, no cuál. Para eso están las comparaciones dos a dos.",
+        "No sustituyas el ANOVA por varias pruebas t entre pares de grupos: al hacer muchas comparaciones aumenta la probabilidad de encontrar alguna diferencia por azar. Las comparaciones de Tukey ya corrigen ese problema (valores p ajustados).",
+        "Si el ANOVA no es significativo, no interpretes las comparaciones dos a dos.",
+        "Las comparaciones de Tukey suponen varianzas iguales. Si usaste el test de Welch, R Commander no ofrece una prueba post hoc específica: interpreta las comparaciones de Tukey con cautela.",
+        "Si la variable de grupo está codificada con números (1, 2, 3), no aparecerá en 'Grupos': conviértela antes en factor (Datos > Modificar variables del conjunto de datos activo > Convertir variable numérica en factor...).",
+        "Tamaño del efecto: eta cuadrado = suma de cuadrados del factor / suma de cuadrados total (columna 'Sum Sq' de la tabla ANOVA). Indica la proporción de la variabilidad explicada por los grupos."
+      )
+    ),
+
+    # 12. Pruebas no paramétricas ---------------------------------------------
+    no_parametricas = list(
+      titulo = "Pruebas no paramétricas: Wilcoxon (dos grupos) y Kruskal-Wallis (tres o más grupos)",
+      ruta = c(
+        "Dos grupos:         Estadísticos > Test no paramétricos > Test de Wilcoxon para dos muestras...",
+        "Tres o más grupos:  Estadísticos > Test no paramétricos > Test de Kruskal-Wallis..."
+      ),
+      pasos = list(
+        "¿CUÁNDO SE USAN?" = c(
+          "Para comparar una variable numérica (u ordinal) entre grupos INDEPENDIENTES cuando no se cumplen las condiciones de las pruebas paramétricas (prueba t o ANOVA).",
+          "El caso habitual: algún grupo tiene menos de 30 observaciones y el test de normalidad (Shapiro-Wilk) da p < 0.05 en alguno de los grupos.",
+          "También cuando la variable es ordinal (p. ej. una escala de 1 a 5) o hay valores extremos muy marcados.",
+          "No comparan medias, sino si los valores de un grupo tienden a ser mayores que los de otro (comparan rangos). Por eso los grupos se describen con mediana y rango intercuartílico."
+        ),
+        "PASO 1. ¿Cuántas categorías tiene la variable explicativa?" = c(
+          "Comprueba cuántos grupos tiene la variable explicativa (Estadísticos > Resúmenes > Distribución de frecuencias...).",
+          "DOS categorías (p. ej. sexo)            -> Test de Wilcoxon para dos muestras (también llamado U de Mann-Whitney). Es la alternativa a la prueba t para muestras independientes. Sigue el paso 2A.",
+          "TRES o más categorías (p. ej. estudios) -> Test de Kruskal-Wallis. Es la alternativa al ANOVA de un factor. Sigue el paso 2B."
+        ),
+        "PASO 2A. Dos grupos: test de Wilcoxon para dos muestras" = c(
+          "Ve a: Estadísticos > Test no paramétricos > Test de Wilcoxon para dos muestras...",
+          "En 'Grupos' selecciona la variable de grupo y en 'Variable explicada' la variable numérica.",
+          "En la pestaña 'Opciones' elige la 'Hipótesis alternativa' según tu pregunta (por defecto bilateral) y deja 'Tipo de test' en 'Por defecto'.",
+          "Pulsa 'Aceptar'. Mira las medianas de cada grupo, el estadístico W y el valor p ('p-value')."
+        ),
+        "PASO 2B. Tres o más grupos: test de Kruskal-Wallis" = c(
+          "Ve a: Estadísticos > Test no paramétricos > Test de Kruskal-Wallis...",
+          "En 'Grupos' selecciona la variable de grupo y en 'Variable explicada' la variable numérica.",
+          "Pulsa 'Aceptar'. Mira las medianas de cada grupo, el estadístico ('Kruskal-Wallis chi-squared'), los grados de libertad ('df') y el valor p ('p-value').",
+          "Si p < 0.05, al menos un grupo es distinto. Para saber cuáles, compara los grupos dos a dos con el test de Wilcoxon (paso 2A, filtrando antes la base para quedarte con cada par) y corrige los valores p: multiplica cada p por el número de comparaciones (corrección de Bonferroni)."
+        )
+      ),
+      ejemplos = c(
+        "Dos grupos:   ¿es distinta la puntuación de calidad de vida entre hombres y mujeres?  -> Wilcoxon",
+        "Tres grupos:  ¿es distinta la estancia hospitalaria entre los hospitales A, B y C?      -> Kruskal-Wallis",
+        "Bonferroni:   3 grupos = 3 comparaciones (A-B, A-C, B-C). Si una da p = 0.02 -> 0.02 x 3 = 0.06 (no significativa)."
+      ),
+      codigo = c(
+        "# Dos grupos (Wilcoxon / Mann-Whitney)",
+        "Tapply(imc ~ sexo, median, na.action = na.omit, data = datos)",
+        'wilcox.test(imc ~ sexo, alternative = "two.sided", data = datos)',
+        "# Tres o más grupos (Kruskal-Wallis)",
+        "Tapply(imc ~ estudios, median, na.action = na.omit, data = datos)",
+        "kruskal.test(imc ~ estudios, data = datos)",
+        "# Comparaciones dos a dos (no lo genera R Commander; equivalente en código)",
+        'pairwise.wilcox.test(datos$imc, datos$estudios, p.adjust.method = "bonferroni")'
+      ),
+      consejos = c(
+        "Estas pruebas son para grupos INDEPENDIENTES. Si son mediciones repetidas en las mismas personas (antes/después), la prueba es otra (Test de Wilcoxon para muestras pareadas).",
+        "No exigen normalidad, pero sí que las observaciones sean independientes.",
+        "Describe los grupos con mediana y rango intercuartílico, no con media y desviación típica.",
+        "Es frecuente el aviso 'cannot compute exact p-value with ties' (hay valores repetidos). No es un error: R usa un valor p aproximado.",
+        "Si los datos cumplen las condiciones de la prueba paramétrica, usa la paramétrica: las no paramétricas tienen menos potencia (detectan peor las diferencias reales).",
+        "La variable de grupo debe ser un factor. Si está codificada con números, conviértela antes (Datos > Modificar variables del conjunto de datos activo > Convertir variable numérica en factor...)."
+      )
     )
   )
 }
