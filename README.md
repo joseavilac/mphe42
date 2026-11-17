@@ -6,14 +6,15 @@
 
 **pphelp** es un asistente para estudiantes que se inician en la estadística
 con [R Commander](https://cran.r-project.org/package=Rcmdr) en salud pública e
-investigación epidemiológica. Tiene dos partes:
+investigación epidemiológica. Se organiza en torno a dos funciones con menú:
 
-- **Una guía interactiva** (`indicar()`) que indica, paso a paso, qué menús y
+- **`indicar()`: una guía interactiva** que indica, paso a paso, qué menús y
   opciones de R Commander utilizar según lo que se quiere hacer: filtrar,
   recodificar, resumir variables, comparar medias o proporciones, estudiar
   correlaciones...
-- **Funciones interactivas que aplican e interpretan las pruebas más
-  habituales.** Preguntan por consola los datos, las variables y las opciones,
+- **`hacer()`: un menú con las pruebas estadísticas del paquete.** Se elige
+  qué se quiere hacer y se lanza la función de esa prueba, que aplica e
+  interpreta las pruebas más habituales. Las funciones preguntan por consola los datos, las variables y las opciones,
   y devuelven un informe completo en español: supuestos, hipótesis, cálculo
   del estadístico, valor p, decisión, intervalo de confianza, tamaño del
   efecto, una frase para redactar el resultado y la orden equivalente en
@@ -57,21 +58,34 @@ nombre de la variable. Trabajan con los `data.frame` cargados en el espacio de
 trabajo, incluido el conjunto de datos activo de R Commander. En cualquier
 momento se puede cancelar con `0`.
 
+Al cargar el paquete se muestra un mensaje que recuerda las dos funciones de
+entrada. Lo más sencillo es empezar por uno de los dos menús:
+
+```r
+indicar()   # ¿cómo se hace en R Commander?
+hacer()     # elegir una prueba y obtener el informe comentado
+```
+
+`hacer()` también admite el número de la opción o el nombre de la prueba, y
+el nivel de significación: `hacer("media_2muestra", alpha = 0.01)`. Cada
+prueba se puede llamar además directamente por su nombre.
+
 ### Funciones disponibles
 
-| Función                  | Qué hace                                                                                                                                | Equivalente en R Commander                                            |
-| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| `indicar()`             | Guía paso a paso de las tareas habituales en R Commander                                                                                | —                                                                    |
-| `normalidad()`          | Pruebas de normalidad (Shapiro-Wilk, Shapiro-Francia, Anderson-Darling, Cramer-von Mises, Lilliefors, chi cuadrado), global o por grupos | Estadísticos > Resúmenes > Test de normalidad                       |
-| `varianza()`            | Prueba de Levene de homogeneidad de varianzas                                                                                            | Estadísticos > Varianzas > Test de Levene                            |
-| `media_1muestra()`      | Prueba t para una muestra                                                                                                                | Estadísticos > Medias > Test t para una muestra                      |
-| `media_2muestra()`      | Prueba t para dos muestras independientes (Welch o Student)                                                                              | Estadísticos > Medias > Test t para muestras independientes          |
-| `anova_1factor()`       | ANOVA de un factor (clásico o F de Welch), con comparaciones dos a dos de Tukey y eta cuadrado                                           | Estadísticos > Medias > ANOVA de un factor                           |
+| Función                  | Qué hace                                                                                                                                | Equivalente en R Commander                                                 |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `indicar()`             | Guía paso a paso de las tareas habituales en R Commander                                                                                | —                                                                         |
+| `hacer()`               | Menú con todas las pruebas del paquete; ejecuta la prueba elegida                                                                       | —                                                                         |
+| `normalidad()`          | Pruebas de normalidad (Shapiro-Wilk, Shapiro-Francia, Anderson-Darling, Cramer-von Mises, Lilliefors, chi cuadrado), global o por grupos | Estadísticos > Resúmenes > Test de normalidad                            |
+| `varianza()`            | Prueba de Levene de homogeneidad de varianzas                                                                                            | Estadísticos > Varianzas > Test de Levene                                 |
+| `media_1muestra()`      | Prueba t para una muestra                                                                                                                | Estadísticos > Medias > Test t para una muestra                           |
+| `media_2muestra()`      | Prueba t para dos muestras independientes (Welch o Student)                                                                              | Estadísticos > Medias > Test t para muestras independientes               |
+| `anova_1factor()`       | ANOVA de un factor (clásico o F de Welch), con comparaciones dos a dos de Tukey y eta cuadrado                                          | Estadísticos > Medias > ANOVA de un factor                                |
 | `np_mw()`               | Prueba de Wilcoxon para dos muestras independientes (U de Mann-Whitney), exacta o con aproximación normal                               | Estadísticos > Test no paramétricos > Test de Wilcoxon para dos muestras |
-| `np_kw()`               | Prueba de Kruskal-Wallis, con comparaciones dos a dos de Wilcoxon y corrección de Bonferroni                                            | Estadísticos > Test no paramétricos > Test de Kruskal-Wallis         |
-| `proporcion_1muestra()` | Prueba de proporciones para una muestra (aproximación normal o binomial exacta)                                                         | Estadísticos > Proporciones > Test de proporciones para una muestra  |
-| `proporcion_2muestra()` | Comparación de dos proporciones independientes (aproximación normal o prueba exacta de Fisher), con RR y OR                            | Estadísticos > Proporciones > Test de proporciones para dos muestras |
-| `prueba_correlacion()`  | Correlación de Pearson, Spearman o Kendall, con covarianza                                                                              | Estadísticos > Resúmenes > Test de correlación                     |
+| `np_kw()`               | Prueba de Kruskal-Wallis, con comparaciones dos a dos de Wilcoxon y corrección de Bonferroni                                            | Estadísticos > Test no paramétricos > Test de Kruskal-Wallis             |
+| `proporcion_1muestra()` | Prueba de proporciones para una muestra (aproximación normal o binomial exacta)                                                         | Estadísticos > Proporciones > Test de proporciones para una muestra       |
+| `proporcion_2muestra()` | Comparación de dos proporciones independientes (aproximación normal o prueba exacta de Fisher), con RR y OR                            | Estadísticos > Proporciones > Test de proporciones para dos muestras      |
+| `prueba_correlacion()`  | Correlación de Pearson, Spearman o Kendall, con covarianza                                                                              | Estadísticos > Resúmenes > Test de correlación                          |
 
 Cada función tiene su página de ayuda: `?media_2muestra`, `?indicar`, etc.
 

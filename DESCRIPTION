@@ -4,10 +4,12 @@ Version: 0.1.0
 Authors@R: 
     person("José Alejandro", "Ávila", , "jaachusc@gmail.com", role = c("aut", "cre"))
 Description: Asistente para estudiantes que se inician en la estadística
-    con R Commander en salud pública e investigación epidemiológica. Ofrece
-    una guía interactiva que indica, paso a paso, qué menús y opciones de R
-    Commander utilizar según el análisis que se quiere realizar, y funciones
-    interactivas que aplican e interpretan las pruebas más habituales:
+    con R Commander en salud pública e investigación epidemiológica. Se
+    organiza en torno a dos funciones con menú: indicar(), una guía
+    interactiva que indica, paso a paso, qué menús y opciones de R Commander
+    utilizar según el análisis que se quiere realizar, y hacer(), que
+    permite elegir y ejecutar las funciones interactivas que aplican e
+    interpretan las pruebas más habituales:
     normalidad, homogeneidad de varianzas (Levene), prueba t para una y dos
     muestras independientes, ANOVA de un factor (clásico o de Welch) con
     comparaciones dos a dos de Tukey, pruebas no paramétricas de Wilcoxon
