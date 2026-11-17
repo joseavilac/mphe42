@@ -1,6 +1,6 @@
 Package: pphelp
 Title: Guía de R Commander y Pruebas Estadísticas en Salud Pública
-Version: 0.0.1
+Version: 0.1.0
 Authors@R: 
     person("José Alejandro", "Ávila", , "jaachusc@gmail.com", role = c("aut", "cre"))
 Description: Asistente para estudiantes que se inician en la estadística
