@@ -269,3 +269,82 @@
 .p_redaccion <- function(p) {
   if (p < 1e-4) "p < 0.0001" else paste0("p = ", .fmt_p(p))
 }
+
+#' Pide una variable de grupo con un número mínimo de categorías
+#'
+#' @param datos data.frame.
+#' @param var_y Variable de respuesta: solo se cuentan categorías del grupo
+#'   con datos válidos en ella.
+#' @param pregunta Texto de la pregunta.
+#' @param min_grupos Número mínimo de categorías con datos.
+#' @param aviso_pocos Frase añadida si el grupo tiene menos categorías de las
+#'   necesarias (p. ej. qué prueba usar en ese caso).
+#' @return Lista con var_g y niveles (categorías con datos, en el orden del
+#'   factor), o NULL si se cancela.
+#' @noRd
+.pedir_grupos <- function(datos, var_y, pregunta, min_grupos = 3,
+                          aviso_pocos = "") {
+  repeat {
+    var_g <- .pedir_variable(datos, "cualitativa", pregunta)
+    if (is.null(var_g)) return(NULL)
+    if (identical(var_g, var_y)) {
+      cat("La variable de grupo no puede ser la misma que la de respuesta.\n")
+      next
+    }
+    g_tmp <- datos[[var_g]][!is.na(datos[[var_y]])]
+    niveles <- levels(droplevels(factor(g_tmp[!is.na(g_tmp)])))
+    if (length(niveles) >= min_grupos) break
+    if (length(niveles) < 2) {
+      cat("'", var_g, "' tiene menos de dos categor\u00edas con datos de '", var_y,
+          "'. Elige otra variable.\n", sep = "")
+    } else {
+      .imprimir(paste0(
+        "'", var_g, "' solo tiene ", length(niveles), " categor\u00edas con datos (",
+        paste(niveles, collapse = ", "), "). Esta prueba compara ",
+        min_grupos, " o m\u00e1s grupos.", aviso_pocos, " Elige otra variable."),
+        sangria = 0)
+    }
+  }
+  list(var_g = var_g, niveles = niveles)
+}
+
+#' Shapiro-Wilk en cada grupo con ajuste de Holm
+#'
+#' @param por_grupo Lista con los valores de cada grupo (p. ej. de split()).
+#' @param alpha Nivel de significación.
+#' @return data.frame con n, p (sin ajustar), p_holm y no_normal (TRUE si
+#'   p_holm < alpha) por grupo. p es NA si n < 3 o n > 5000; p.adjust ignora
+#'   los NA al contar los contrastes.
+#' @noRd
+.shapiro_grupos <- function(por_grupo, alpha) {
+  n <- vapply(por_grupo, length, numeric(1))
+  p <- vapply(por_grupo, function(x)
+    if (length(x) >= 3 && length(x) <= 5000 && stats::sd(x) > 0)
+      stats::shapiro.test(x)$p.value else NA_real_, numeric(1))
+  p_holm <- stats::p.adjust(p, method = "holm")
+  data.frame(n = n, p = p, p_holm = p_holm,
+             no_normal = !is.na(p_holm) & p_holm < alpha,
+             row.names = names(por_grupo))
+}
+
+#' Texto del resultado de Shapiro-Wilk de un grupo (p sin ajustar y Holm)
+#' @noRd
+.texto_shapiro <- function(nom, n, p, p_holm, alpha) {
+  if (is.na(p)) return(paste0("'", nom, "' (n = ", n, "): no se puede ",
+                              "aplicar (requiere entre 3 y 5000 ",
+                              "observaciones no constantes)."))
+  paste0("'", nom, "' (n = ", n, "): p sin ajustar", .comparar_p(p),
+         "; p ajustado", .comparar_p(p_holm),
+         if (p_holm < alpha) paste0(" < ", alpha, ", se aleja de la normal.")
+         else paste0(" >= ", alpha, ", sin evidencia de no normalidad."))
+}
+
+#' Nota estándar sobre el ajuste de Holm en la normalidad por grupos
+#' @noRd
+.nota_holm <- function(n_contrastes) {
+  paste0("Los valores p se ajustan por el m\u00e9todo de Holm (", n_contrastes,
+         " contrastes), como hace R Commander al pedir el test de ",
+         "normalidad por grupos: al hacer un contraste en cada grupo aumenta ",
+         "la probabilidad de que alguno salga significativo por azar. La ",
+         "decisi\u00f3n se toma con el p ajustado.")
+}

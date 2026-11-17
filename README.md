@@ -29,7 +29,7 @@ posterior); no requiere Rtools porque no contiene código compilado.
 remotes::install_github("joseavilac/pphelp")
 ```
 
-Las dependencias (`car` y `nortest`) se instalan automáticamente desde CRAN.
+Las dependencias (`car`, `multcomp` y `nortest`) se instalan automáticamente desde CRAN.
 
 Para instalar una versión concreta:
 
@@ -41,7 +41,7 @@ Si no hay acceso a GitHub, se puede instalar desde el archivo del paquete
 (`pphelp_0.0.1.tar.gz`):
 
 ```r
-install.packages(c("car", "nortest"))
+install.packages(c("car", "multcomp", "nortest"))
 install.packages("pphelp_0.0.1.tar.gz", repos = NULL, type = "source")
 ```
 
@@ -66,6 +66,9 @@ momento se puede cancelar con `0`.
 | `varianza()`            | Prueba de Levene de homogeneidad de varianzas                                                                                            | Estadísticos > Varianzas > Test de Levene                            |
 | `media_1muestra()`      | Prueba t para una muestra                                                                                                                | Estadísticos > Medias > Test t para una muestra                      |
 | `media_2muestra()`      | Prueba t para dos muestras independientes (Welch o Student)                                                                              | Estadísticos > Medias > Test t para muestras independientes          |
+| `anova_1factor()`       | ANOVA de un factor (clásico o F de Welch), con comparaciones dos a dos de Tukey y eta cuadrado                                           | Estadísticos > Medias > ANOVA de un factor                           |
+| `np_mw()`               | Prueba de Wilcoxon para dos muestras independientes (U de Mann-Whitney), exacta o con aproximación normal                               | Estadísticos > Test no paramétricos > Test de Wilcoxon para dos muestras |
+| `np_kw()`               | Prueba de Kruskal-Wallis, con comparaciones dos a dos de Wilcoxon y corrección de Bonferroni                                            | Estadísticos > Test no paramétricos > Test de Kruskal-Wallis         |
 | `proporcion_1muestra()` | Prueba de proporciones para una muestra (aproximación normal o binomial exacta)                                                         | Estadísticos > Proporciones > Test de proporciones para una muestra  |
 | `proporcion_2muestra()` | Comparación de dos proporciones independientes (aproximación normal o prueba exacta de Fisher), con RR y OR                            | Estadísticos > Proporciones > Test de proporciones para dos muestras |
 | `prueba_correlacion()`  | Correlación de Pearson, Spearman o Kendall, con covarianza                                                                              | Estadísticos > Resúmenes > Test de correlación                     |
@@ -141,6 +144,20 @@ paquete aplica estos criterios:
   R Commander.
 - **Prueba t de dos muestras:** se ofrecen Welch (recomendada, opción por
   defecto de R Commander), Student o decidir según Levene.
+- **ANOVA de un factor:** se recomienda el ANOVA clásico si la prueba de
+  Levene no rechaza la igualdad de varianzas, y el F de Welch si la rechaza.
+  Si algún grupo tiene n < 30 y no se puede asumir normalidad, se remite a la
+  prueba de Kruskal-Wallis. Las comparaciones dos a dos se hacen con la prueba
+  de Tukey de `multcomp::glht()`, como R Commander, también cuando se aplica
+  Welch (con un aviso, porque Tukey supone varianzas iguales).
+- **Pruebas no paramétricas** (Mann-Whitney, Kruskal-Wallis): comprueban la
+  normalidad por grupo (Shapiro-Wilk, ajuste de Holm) y avisan si se cumplen
+  las condiciones de la prueba t o del ANOVA, que tienen más potencia (salvo
+  variables ordinales). Los grupos se describen con mediana, rango
+  intercuartílico y rango medio. En Mann-Whitney, el tipo de prueba por
+  defecto es el de R (exacta si ambos grupos tienen n < 50 y no hay empates).
+  Las comparaciones dos a dos tras Kruskal-Wallis se hacen con la prueba de
+  Wilcoxon y corrección de Bonferroni, como indica `indicar()`.
 - **Proporciones:** se recomienda la prueba exacta (binomial o de Fisher)
   cuando alguna frecuencia esperada bajo H0 es menor que 5.
 - **Correlación:** se recomienda Pearson si se asume normalidad en las dos
@@ -148,7 +165,8 @@ paquete aplica estos criterios:
   Evans (1996): < 0.2 muy débil, 0.2–0.4 débil, 0.4–0.6 moderada, 0.6–0.8
   fuerte, ≥ 0.8 muy fuerte.
 - **Tamaño del efecto:** d de Cohen (medias) y h de Cohen (proporciones),
-  con los umbrales orientativos 0.2, 0.5 y 0.8. En la comparación de dos
+  con los umbrales orientativos 0.2, 0.5 y 0.8. En el ANOVA, eta cuadrado
+  (SC entre / SC total), con los umbrales 0.01, 0.06 y 0.14. En la comparación de dos
   proporciones se añaden la diferencia en puntos porcentuales, el riesgo
   relativo y la odds ratio.
 - **Contrastes unilaterales:** la hipótesis nula se expresa en forma

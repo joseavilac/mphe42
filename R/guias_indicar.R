@@ -392,7 +392,8 @@ guias_indicar <- function() {
           "Ve a: Estadísticos > Resúmenes > Test de normalidad...",
           "Selecciona la variable numérica y deja marcado el test de Shapiro-Wilk.",
           "Pulsa 'Test por grupos...' y selecciona la variable que define los grupos.",
-          "Pulsa 'Aceptar' y mira el valor p de cada grupo: si p >= 0.05 en todos, asumimos normalidad; si p < 0.05 en alguno, NO asumimos normalidad y debes usar el test de Kruskal-Wallis (opción 'Pruebas no paramétricas')."
+          "Pulsa 'Aceptar'. Al final de la salida aparece la tabla 'p-values adjusted by the Holm method': usa la columna 'adjusted' (valores p ajustados por comparaciones múltiples), no los p de cada test por separado.",
+          "Si el p ajustado es >= 0.05 en todos los grupos, asumimos normalidad; si es < 0.05 en alguno, NO asumimos normalidad y debes usar el test de Kruskal-Wallis (opción 'Pruebas no paramétricas')."
         ),
         "PASO 2. Test de Levene (¿son iguales las varianzas?)" = c(
           "Ve a: Estadísticos > Varianzas > Test de Levene...",
@@ -432,6 +433,7 @@ guias_indicar <- function() {
         "Un ANOVA significativo solo indica que AL MENOS una media es distinta, no cuál. Para eso están las comparaciones dos a dos.",
         "No sustituyas el ANOVA por varias pruebas t entre pares de grupos: al hacer muchas comparaciones aumenta la probabilidad de encontrar alguna diferencia por azar. Las comparaciones de Tukey ya corrigen ese problema (valores p ajustados).",
         "Si el ANOVA no es significativo, no interpretes las comparaciones dos a dos.",
+        "En el test de normalidad por grupos se usan los valores p ajustados (Holm) porque se hace un contraste en cada grupo: cuantos más grupos, más probable es que alguno salga significativo por azar.",
         "Las comparaciones de Tukey suponen varianzas iguales. Si usaste el test de Welch, R Commander no ofrece una prueba post hoc específica: interpreta las comparaciones de Tukey con cautela.",
         "Si la variable de grupo está codificada con números (1, 2, 3), no aparecerá en 'Grupos': conviértela antes en factor (Datos > Modificar variables del conjunto de datos activo > Convertir variable numérica en factor...).",
         "Tamaño del efecto: eta cuadrado = suma de cuadrados del factor / suma de cuadrados total (columna 'Sum Sq' de la tabla ANOVA). Indica la proporción de la variabilidad explicada por los grupos."
@@ -448,7 +450,7 @@ guias_indicar <- function() {
       pasos = list(
         "¿CUÁNDO SE USAN?" = c(
           "Para comparar una variable numérica (u ordinal) entre grupos INDEPENDIENTES cuando no se cumplen las condiciones de las pruebas paramétricas (prueba t o ANOVA).",
-          "El caso habitual: algún grupo tiene menos de 30 observaciones y el test de normalidad (Shapiro-Wilk) da p < 0.05 en alguno de los grupos.",
+          "El caso habitual: algún grupo tiene menos de 30 observaciones y el test de normalidad por grupos (Shapiro-Wilk) da p ajustado < 0.05 en alguno de ellos (columna 'adjusted' de la tabla 'p-values adjusted by the Holm method').",
           "También cuando la variable es ordinal (p. ej. una escala de 1 a 5) o hay valores extremos muy marcados.",
           "No comparan medias, sino si los valores de un grupo tienden a ser mayores que los de otro (comparan rangos). Por eso los grupos se describen con mediana y rango intercuartílico."
         ),
