@@ -22,8 +22,25 @@ investigación epidemiológica. Se organiza en torno a dos funciones con menú:
 
 ## Instalación
 
-El paquete se instala desde GitHub. Solo hace falta R (versión 4.2 o
-posterior); no requiere Rtools porque no contiene código compilado.
+### Opción 1: desde R-universe (recomendada)
+
+Solo hace falta R (versión 4.2 o posterior). R-universe ofrece el paquete
+ya compilado para Windows y macOS, por lo que no es necesario instalar
+`remotes` ni Rtools:
+
+```r
+install.packages("mphe42",
+                 repos = c("https://joseavilac.r-universe.dev",
+                           "https://cloud.r-project.org"))
+```
+
+El segundo repositorio (CRAN) es necesario para que se instalen
+automáticamente las dependencias (`car`, `multcomp` y `nortest`). Para
+actualizar el paquete a la última versión, basta con repetir la misma orden.
+
+### Opción 2: desde GitHub
+
+No requiere Rtools porque el paquete no contiene código compilado.
 
 ```r
 # install.packages("remotes")   # solo la primera vez
@@ -38,8 +55,10 @@ Para instalar una versión concreta:
 remotes::install_github("joseavilac/mphe42@v0.9.0")
 ```
 
-Si no hay acceso a GitHub, se puede instalar desde el archivo del paquete
-(`mphe42_0.9.0.tar.gz`):
+### Opción 3: desde el archivo del paquete
+
+Si no hay acceso a R-universe ni a GitHub, se puede instalar desde el archivo
+del paquete (`mphe42_0.9.0.tar.gz`):
 
 ```r
 install.packages(c("car", "multcomp", "nortest"))
