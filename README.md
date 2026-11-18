@@ -1,10 +1,10 @@
-# pphelp
+# mphe42
 
 <!-- badges: start -->
 
 <!-- badges: end -->
 
-**pphelp** es un asistente para estudiantes que se inician en la estadística
+**mphe42** es un asistente para estudiantes que se inician en la estadística
 con [R Commander](https://cran.r-project.org/package=Rcmdr) en salud pública e
 investigación epidemiológica. Se organiza en torno a dos funciones con menú:
 
@@ -27,7 +27,7 @@ posterior); no requiere Rtools porque no contiene código compilado.
 
 ```r
 # install.packages("remotes")   # solo la primera vez
-remotes::install_github("joseavilac/pphelp")
+remotes::install_github("joseavilac/mphe42")
 ```
 
 Las dependencias (`car`, `multcomp` y `nortest`) se instalan automáticamente desde CRAN.
@@ -35,21 +35,21 @@ Las dependencias (`car`, `multcomp` y `nortest`) se instalan automáticamente de
 Para instalar una versión concreta:
 
 ```r
-remotes::install_github("joseavilac/pphelp@v0.0.1")
+remotes::install_github("joseavilac/mphe42@v0.9.0")
 ```
 
 Si no hay acceso a GitHub, se puede instalar desde el archivo del paquete
-(`pphelp_0.0.1.tar.gz`):
+(`mphe42_0.9.0.tar.gz`):
 
 ```r
 install.packages(c("car", "multcomp", "nortest"))
-install.packages("pphelp_0.0.1.tar.gz", repos = NULL, type = "source")
+install.packages("mphe42_0.9.0.tar.gz", repos = NULL, type = "source")
 ```
 
 ## Uso
 
 ```r
-library(pphelp)
+library(mphe42)
 ```
 
 Las funciones son **interactivas**: ejecútalas en la consola de R (RGui o
@@ -188,7 +188,7 @@ paquete aplica estos criterios:
 
 ## Aviso
 
-pphelp es una herramienta docente. Sus recomendaciones siguen criterios
+mphe42 es una herramienta docente. Sus recomendaciones siguen criterios
 habituales en la enseñanza de la bioestadística, pero no sustituyen el
 razonamiento sobre el diseño del estudio ni la revisión gráfica de los datos.
 

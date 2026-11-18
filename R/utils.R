@@ -1,4 +1,4 @@
-# Funciones internas compartidas por las funciones interactivas de pphelp.
+# Funciones internas compartidas por las funciones interactivas de mphe42.
 # No se exportan.
 
 #' @noRd
